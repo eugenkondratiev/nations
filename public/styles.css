@@ -7,7 +7,13 @@
 a {
     text-decoration: none;
 }
-h1,h2,h3,h4,h5,h6 {
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     text-align: center;
 }
 
@@ -16,7 +22,9 @@ ul {
 }
 
 html {
-    font: normal normal 300 14/20px Helvetica;
+    font-family: Helvetica;
+    font-size: 12px;
+    line-height: 1.2rem;
 }
 
 body {
@@ -46,18 +54,25 @@ body {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    flex-wrap: wrap;
 }
 
-.string-inputs input{
+.string-inputs input {
     width: 12ch;
 }
-.string-inputs input{
-margin-left: .5rem;
+
+.string-inputs input {
+    margin-left: .5rem;
 }
+
 .input-wrapper {
     display: flex;
     flex: 0 0 calc(40% - .5rem);
+    flex-wrap: nowrap;
 }
+
 .string-inputs {
     justify-content: center;
+    flex-wrap: nowrap;
+    display: flex;
 }

@@ -3,7 +3,7 @@ const API_HOST = "http://95.158.47.15:3003";
 function getNationsBase() {
     ajaxGet("GET", API_HOST + "/ids")
         .then(ids => {
-            // console.log(JSON.parse(ids));
+            console.log(JSON.parse(ids).base);
 
         })
         .catch(errResponse => {console.log(errResponse)});
@@ -39,21 +39,24 @@ window.addEventListener('load', () => {
     getNationsBase();
 
     async function searchByName() {
-        console.log('searchByName!');
         const _name = document.querySelector("#player-name").value;
+        console.log('searchByName! ', _name);
+
         try {
             const resp = await ajaxGet("GET", `${API_HOST}/find?name=${_name}`);
-            console.log("resp    - " , resp);
             try {
                 const answer = JSON.parse(resp);
-                console.log(answer);
                 console.log(JSON.stringify(answer));
 
                 const searchTarget = document.getElementById("by-name");
+                if (answer.fail) {
+                    searchTarget.textContent = answer.fail;
+                    return
+                }
                 searchTarget.innerHTML = answer.map((row, i) => {
                     row.unshift(i+1+". ");
                     row.push("<br>");
-                    return row;
+                    return row.join("  -   ");
                 })
                 // answer.forEach((element, i) => {
                 //     element.unshift(i+". ");
@@ -73,11 +76,37 @@ window.addEventListener('load', () => {
         }
     }
     async function searchByNation() {
-        console.log('searchByNation!')
         const _nation = document.querySelector("#nation").value;
+        console.log('searchByNation! ', _nation)
+
         try {
             const resp = await ajaxGet("GET", `${API_HOST}/exot?nation=${_nation}`);
-            console.log(resp)
+            // console.log(resp);
+            try {
+                const answer = JSON.parse(resp);
+                // console.log(answer);
+                // console.log(JSON.stringify(answer));
+
+                const searchTarget = document.getElementById("by-nation");
+                if (answer.fail) {
+                    searchTarget.textContent = answer.fail;
+                    return
+                }
+                searchTarget.innerHTML = answer.map((row, i) => {
+                    row.unshift(i+1+". ");
+                    row.push("<br>");
+                    return row.join("    -   ");
+                })
+                // answer.forEach((element, i) => {
+                //     element.unshift(i+". ");
+                //     element.push("\n");
+                //     const newRow = document.createTextNode(element);
+                //     searchTarget.appendChild(newRow);
+                    
+                // });
+            } catch (error) {
+                console.log(error.message);
+            }
         } catch (error) {
             console.log("search error ", error.message);
         }
