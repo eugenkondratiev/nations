@@ -1,10 +1,19 @@
 ;
 const API_HOST = "http://95.158.47.15:3003";
+const searchTarget = document.getElementById("search-result");
+
 function getNationsBase() {
     ajaxGet("GET", API_HOST + "/ids")
         .then(ids => {
-            console.log(JSON.parse(ids).base);
-
+            const lists = JSON.parse(ids);
+            const _base = lists.base; 
+            console.log(_base); 
+            document.getElementById("current-stat").textContent = `Текущее количество игроков: ${_base.all}, школьников: ${_base.school}, пенсионеров: ${_base.pens}`;
+            const _nations = lists.nations.filter(a => a).sort((a, b) => a[1].localeCompare(b[1], 'ru', { sensitivity: 'base' }));
+            const selectNation = document.getElementById("nation");
+            _nations.forEach(element => {
+                if (element) selectNation.appendChild(new Option(element[1], element[0]))
+            });
         })
         .catch(errResponse => {console.log(errResponse)});
 }
@@ -58,19 +67,9 @@ window.addEventListener('load', () => {
                     row.push("<br>");
                     return row.join("  -   ");
                 })
-                // answer.forEach((element, i) => {
-                //     element.unshift(i+". ");
-                //     element.push("\n");
-                //     const newRow = document.createTextNode(element);
-                //     searchTarget.appendChild(newRow);
-                    
-                // });
             } catch (error) {
                 console.log(error.message);
             }
-            
-            
-
         } catch (error) {
             console.log("search error ", error.message)
         }
@@ -81,13 +80,9 @@ window.addEventListener('load', () => {
 
         try {
             const resp = await ajaxGet("GET", `${API_HOST}/exot?nation=${_nation}`);
-            // console.log(resp);
             try {
                 const answer = JSON.parse(resp);
-                // console.log(answer);
-                // console.log(JSON.stringify(answer));
-
-                const searchTarget = document.getElementById("by-nation");
+ 
                 if (answer.fail) {
                     searchTarget.textContent = answer.fail;
                     return
@@ -97,14 +92,7 @@ window.addEventListener('load', () => {
                     row.push("<br>");
                     return row.join("    -   ");
                 })
-                // answer.forEach((element, i) => {
-                //     element.unshift(i+". ");
-                //     element.push("\n");
-                //     const newRow = document.createTextNode(element);
-                //     searchTarget.appendChild(newRow);
-                    
-                // });
-            } catch (error) {
+             } catch (error) {
                 console.log(error.message);
             }
         } catch (error) {
